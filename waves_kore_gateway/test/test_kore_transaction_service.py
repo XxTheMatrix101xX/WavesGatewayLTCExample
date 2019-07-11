@@ -6,17 +6,17 @@ from unittest.mock import MagicMock, patch
 from bitcoinrpc.authproxy import AuthServiceProxy
 from waves_gateway import TransactionAttempt, TransactionAttemptReceiver
 
-from waves_litecoin_gateway.lib import LitecoinTransactionService, LitecoinChainQueryService
+from waves_kore_gateway.lib import KoreTransactionService, KoreChainQueryService
 
 
-class LitecoinTransactionServiceSpec(unittest.TestCase):
+class KoreTransactionServiceSpec(unittest.TestCase): ###validate all these numbers
     def setUp(self):
-        self._ltc_proxy = MagicMock()
-        self._ltc_factor = MagicMock()
-        self._ltc_chain_query_service = MagicMock()
-        self._transaction_service = LitecoinTransactionService(
-            ltc_proxy=cast(AuthServiceProxy, self._ltc_proxy),
-            ltc_chain_query_service=cast(LitecoinChainQueryService, self._ltc_chain_query_service))
+        self._kore_proxy = MagicMock()
+        self._kore_factor = MagicMock()
+        self._kore_chain_query_service = MagicMock()
+        self._transaction_service = KoreTransactionService(
+            kore_proxy=cast(AuthServiceProxy, self._kore_proxy),
+            kore_chain_query_service=cast(KoreChainQueryService, self._kore_chain_query_service))
 
     def test_fast_optimize_unspents_no_result(self):
         unspents = list()
@@ -91,20 +91,20 @@ class LitecoinTransactionServiceSpec(unittest.TestCase):
 
         expected_outputs = {"2195378": Decimal("1"), "2396478": Decimal("2"), "29873587235": Decimal("1.98")}
 
-        self._ltc_proxy.listunspent.return_value = mock_unspents
-        self._ltc_proxy.createrawtransaction.return_value = mock_raw_transaction
-        self._ltc_proxy.signrawtransaction.return_value = mock_signed_raw_transaction
-        self._ltc_proxy.sendrawtransaction.return_value = mock_tx
-        self._ltc_chain_query_service.get_transaction.return_value = mock_transaction
+        self._kore_proxy.listunspent.return_value = mock_unspents
+        self._kore_proxy.createrawtransaction.return_value = mock_raw_transaction
+        self._kore_proxy.signrawtransaction.return_value = mock_signed_raw_transaction
+        self._kore_proxy.sendrawtransaction.return_value = mock_tx
+        self._kore_chain_query_service.get_transaction.return_value = mock_transaction
 
         with patch.object(self._transaction_service, '_fast_optimize_unspents'):
             self._transaction_service._fast_optimize_unspents.return_value = mock_optimized_unspents
 
             res = self._transaction_service.send_coin(mock_attempt, None)
 
-            self._ltc_proxy.listunspent.assert_called_once_with(None, None, [mock_attempt.sender])
-            self._ltc_proxy.createrawtransaction.assert_called_once_with(mock_optimized_unspents, expected_outputs)
-            self._ltc_proxy.signrawtransaction.assert_called_once_with(mock_raw_transaction)
-            self._ltc_proxy.sendrawtransaction.assert_called_once_with(mock_signed_raw_transaction['hex'])
+            self._kore_proxy.listunspent.assert_called_once_with(None, None, [mock_attempt.sender])
+            self._kore_proxy.createrawtransaction.assert_called_once_with(mock_optimized_unspents, expected_outputs)
+            self._kore_proxy.signrawtransaction.assert_called_once_with(mock_raw_transaction)
+            self._kore_proxy.sendrawtransaction.assert_called_once_with(mock_signed_raw_transaction['hex'])
             self.assertEqual(res, mock_transaction)
-            self._ltc_chain_query_service.get_transaction.assert_called_once_with(mock_tx)
+            self._kore_chain_query_service.get_transaction.assert_called_once_with(mock_tx)

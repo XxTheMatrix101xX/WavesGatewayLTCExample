@@ -1,5 +1,5 @@
 """
-LitecoinTransactionService
+KoreTransactionService
 """
 
 from decimal import Decimal
@@ -10,22 +10,22 @@ import gevent.lock as lock
 import waves_gateway as gw
 from bitcoinrpc.authproxy import AuthServiceProxy
 
-from .litecoin_chain_query_service import LitecoinChainQueryService
+from .kore_chain_query_service import KoreChainQueryService
 from .util import sum_unspents
 
 
-class LitecoinTransactionService(gw.TransactionService):
+class KoreTransactionService(gw.TransactionService):
     """
-    Implements the sending of an TransactionAttempt on the Litecoin Blockchain.
+    Implements the sending of an TransactionAttempt on the Kore Blockchain.
     """
 
     def __init__(self,
-                 ltc_proxy: AuthServiceProxy,
-                 ltc_chain_query_service: LitecoinChainQueryService,
+                 kore_proxy: AuthServiceProxy,
+                 kore_chain_query_service: KoreChainQueryService,
                  min_optimized_amount: Decimal = Decimal(0.0000001)) -> None:
-        self._ltc_proxy = ltc_proxy
+        self._kore_proxy = kore_proxy
         self._min_optimized_amount = min_optimized_amount
-        self._ltc_chain_query_service = ltc_chain_query_service
+        self._kore_chain_query_service = kore_chain_query_service
         self._lock = lock.Semaphore()
 
     def _fast_optimize_unspents(self, unspents: List[dict], dst_amount: Decimal) -> Optional[List]:
@@ -66,7 +66,7 @@ class LitecoinTransactionService(gw.TransactionService):
 
     def send_coin(self, attempt: gw.TransactionAttempt, secret: Optional[str] = None) -> gw.Transaction:
 
-        unspents = self._ltc_proxy.listunspent(None, None, [attempt.sender])
+        unspents = self._kore_proxy.listunspent(None, None, [attempt.sender])
 
         outputs = dict()
 
@@ -86,10 +86,10 @@ class LitecoinTransactionService(gw.TransactionService):
 
         self._lock.acquire()
 
-        raw_transaction = self._ltc_proxy.createrawtransaction(optimized_unspents, outputs)
-        signed_transaction = self._ltc_proxy.signrawtransaction(raw_transaction)
-        tx = self._ltc_proxy.sendrawtransaction(signed_transaction['hex'])
+        raw_transaction = self._kore_proxy.createrawtransaction(optimized_unspents, outputs)
+        signed_transaction = self._kore_proxy.signrawtransaction(raw_transaction)
+        tx = self._kore_proxy.sendrawtransaction(signed_transaction['hex'])
 
         self._lock.release()
 
-        return self._ltc_chain_query_service.get_transaction(tx)
+        return self._kore_chain_query_service.get_transaction(tx)

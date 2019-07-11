@@ -4,16 +4,16 @@ from unittest.mock import MagicMock
 
 from waves_gateway import Transaction, TransactionReceiver
 
-from waves_litecoin_gateway.lib import LitecoinChainQueryService
+from waves_kore_gateway.lib import KoreChainQueryService
 
 
-class LitecoinChainQueryServiceTest(unittest.TestCase):
+class KoreChainQueryServiceTest(unittest.TestCase):
     def setUp(self):
-        self._ltc_proxy = MagicMock()
-        self._ltc_factor = pow(10, 8)
-        self._chain_query_service = LitecoinChainQueryService(self._ltc_proxy)
+        self._kore_proxy = MagicMock()
+        self._kore_factor = pow(10, 8) #####what is this?
+        self._chain_query_service = KoreChainQueryService(self._kore_proxy)
 
-    def test_get_transactions_of_block_at_height(self):
+    def test_get_transactions_of_block_at_height(self):  ############what the fuck is this? there are no transactions or addresses like these on waves or kore?!?!?!?!?!?!?!?!?!?!?!?
         block = {
             'tx': [
                 '345fe8a6c9cfc992f5fa8982ec39f0a4f64a2b99f88a00fdbe6556dd784bfa53',
@@ -90,8 +90,8 @@ class LitecoinChainQueryServiceTest(unittest.TestCase):
 
         height = MagicMock()
 
-        self._ltc_proxy.getblockhash.return_value = block['hash']
-        self._ltc_proxy.getblock.return_value = block
+        self._kore_proxy.getblockhash.return_value = block['hash']
+        self._kore_proxy.getblock.return_value = block
 
         def getrawtransaction(tx: str):
             if tx == block['tx'][0]:
@@ -109,35 +109,35 @@ class LitecoinChainQueryServiceTest(unittest.TestCase):
             else:
                 raise KeyError('called with unknown tx')
 
-        self._ltc_proxy.getrawtransaction.side_effect = getrawtransaction
-        self._ltc_proxy.decoderawtransaction.side_effect = decoderawtransaction
+        self._kore_proxy.getrawtransaction.side_effect = getrawtransaction
+        self._kore_proxy.decoderawtransaction.side_effect = decoderawtransaction
 
         transactions = self._chain_query_service.get_transactions_of_block_at_height(height)
 
         self.assertEqual(transactions[0], expected_first_transaction)
         self.assertEqual(transactions[1], expected_sec_transaction)
 
-        self._ltc_proxy.decoderawtransaction.assert_any_call(raw_first_tx)
-        self._ltc_proxy.decoderawtransaction.assert_any_call(raw_sec_tx)
-        self.assertEqual(2, self._ltc_proxy.decoderawtransaction.call_count)
-        self._ltc_proxy.getrawtransaction.assert_any_call(block['tx'][0])
-        self._ltc_proxy.getrawtransaction.assert_any_call(block['tx'][1])
-        self.assertEqual(2, self._ltc_proxy.getrawtransaction.call_count)
-        self._ltc_proxy.getblock.assert_called_once_with(block['hash'])
-        self._ltc_proxy.getblockhash.assert_called_once_with(height)
+        self._kore_proxy.decoderawtransaction.assert_any_call(raw_first_tx)
+        self._kore_proxy.decoderawtransaction.assert_any_call(raw_sec_tx)
+        self.assertEqual(2, self._kore_proxy.decoderawtransaction.call_count)
+        self._kore_proxy.getrawtransaction.assert_any_call(block['tx'][0])
+        self._kore_proxy.getrawtransaction.assert_any_call(block['tx'][1])
+        self.assertEqual(2, self._kore_proxy.getrawtransaction.call_count)
+        self._kore_proxy.getblock.assert_called_once_with(block['hash'])
+        self._kore_proxy.getblockhash.assert_called_once_with(height)
 
     def test_get_amount_of_transaction(self):
         tx = MagicMock()
         expected_result = MagicMock()
         transaction = {'amount': MagicMock()}
 
-        self._ltc_proxy.gettransaction.return_value = transaction
+        self._kore_proxy.gettransaction.return_value = transaction
 
         self.assertEqual(self._chain_query_service.get_amount_of_transaction(tx), transaction['amount'])
 
-        self._ltc_proxy.gettransaction.assert_called_once_with(tx)
+        self._kore_proxy.gettransaction.assert_called_once_with(tx)
 
     def test_get_height_of_highest_block(self):
         info = {'blocks': MagicMock()}
-        self._ltc_proxy.getinfo.return_value = info
+        self._kore_proxy.getinfo.return_value = info
         self.assertEqual(self._chain_query_service.get_height_of_highest_block(), info['blocks'])
