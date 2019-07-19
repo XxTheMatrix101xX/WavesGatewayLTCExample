@@ -19,13 +19,13 @@ class KoreGateway(object):
     """
 
     DEFAULT_WAVES_CHAIN = "mainnet"
-    DEFAULT_KORE_FACTOR = pow(10, 8) ######What is this?
+    DEFAULT_KORE_FACTOR = pow(10, 8)
     DEFAULT_KORE_ROUND_PRECISION = 8
     DEFAULT_TRANSACTION_WEB_LINK = "https://chainz.cryptoid.info/kore/tx.dws?{{tx}}.htm"
     DEFAULT_ADDRESS_WEB_LINK = "https://chainz.cryptoid.info/kore/tx.dws?{{tx}}.htm"
     DEFAULT_MONGO_DATABASE = "kore-gateway"
     WEB_CURRENCY_NAME = "Kore"
-    WAVES_ASSET_ID = "HtuMVfunYhNpsqhFotXuwXvrC9wt6UD6ENdpQEQxtGAv" ####we need our own asset ID
+    WAVES_ASSET_ID = "HtuMVfunYhNpsqhFotXuwXvrC9wt6UD6ENdpQEQxtGAv"
     DEFAULT_PORT = 5000
     DEFAULT_HOST = 'localhost'
 

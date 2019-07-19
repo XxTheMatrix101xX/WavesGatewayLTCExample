@@ -1,5 +1,5 @@
 """
-Litecoin Gateway
+Korecoin Gateway
 """
 import gevent.monkey
 gevent.monkey.patch_all()

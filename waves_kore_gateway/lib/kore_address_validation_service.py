@@ -11,7 +11,7 @@ class KoreAddressValidationService(wg.AddressValidationService):
     Validates a KORE address by using an RPC service.
     """
 
-    def __init__(self, ltc_proxy: AuthServiceProxy) -> None:
+    def __init__(self, kore_proxy: AuthServiceProxy) -> None:
         self._kore_proxy = kore_proxy
 
     def validate_address(self, address: str) -> bool:

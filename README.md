@@ -1,9 +1,9 @@
-# Waves-Litecoin-Gateway
+# Waves-Korecoin-Gateway
 
-The project realizes a Litecoin-Gateway for the Wavesplatform.
+The project realizes a Kore-Gateway for the Wavesplatform.
 To do that, it makes use of the Waves-Gateway-Framework.
 Common logic of how a such an Gateway operates is already defined in the Framework.
-This project does only define the logic that is necessary to communicate with a Litecoin node.
+This project does only define the logic that is necessary to communicate with a Kore node.
 
 ## Getting started
 
@@ -19,7 +19,7 @@ Developing requires additional packages to be installed:
 pip3 install nose coverage yapf mypy pylint
 ```
 
-You have to provide a configuration for the Waves-Litecoin-Gateway.
+You have to provide a configuration for the Waves-Korecoin-Gateway.
 An example configuration may look like this:
 ```
 # This can be used for local testing. Mostly be developers.
@@ -41,7 +41,7 @@ coin_public_key = **********************************
 [mongodb]
 host = localhost
 port = 27017
-database = ltc-gateway
+database = kore-gateway
 
 [server]
 host = localhost
@@ -60,30 +60,30 @@ The server can be started by calling: `python3.5 main.py`.
 
 ## Unittests
 ```bash
-python3.5 -m nose waves_litecoin_gateway/test
+python3.5 -m nose waves_korecoin_gateway/test
 ```
 
 ## Coverage
 ```bash
-python3.5 -m nose waves_litecoin_gateway/test --with-coverage --cover-package waves_litecoin_gateway
+python3.5 -m nose waves_korecoin_gateway/test --with-coverage --cover-package waves_korecoin_gateway
 ```
 
 ## Linting
 ```bash
 python3.5 -m pylint main.py
-python3.5 -m pylint waves_litecoin_gateway
+python3.5 -m pylint waves_korecoin_gateway
 ```
 
 ## MyPy
 ```bash
 python3.5 -m mypy main.py --ignore-missing-imports
-python3.5 -m mypy waves_litecoin_gateway --ignore-missing-imports
+python3.5 -m mypy waves_korecoin_gateway --ignore-missing-imports
 ```
 
 ## yapf
 This project uses yapf (https://github.com/google/yapf) as a formatting tool
 So, please format your code before committing by running this:
 ```bash
-python3.5 -m yapf -r waves_litecoin_gateway --style pep8 --style {COLUMN_LIMIT:120} -i
+python3.5 -m yapf -r waves_korecoin_gateway --style pep8 --style {COLUMN_LIMIT:120} -i
 python3.5 -m yapf --style pep8 --style {COLUMN_LIMIT:120} -i main.py
 ```
